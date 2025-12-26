@@ -110,11 +110,18 @@
     const successMessage = document.getElementById('successMessage');
     let selectedOption = null;
 
-    // Initialize votes from localStorage
+    // Initialize votes from localStorage with error handling
     function getVotes() {
-      const votes = localStorage.getItem('masrahthon_votes');
-      if (votes) {
-        return JSON.parse(votes);
+      try {
+        const votes = localStorage.getItem('masrahthon_votes');
+        if (votes) {
+          const parsed = JSON.parse(votes);
+          if (typeof parsed.option1 === 'number' && typeof parsed.option2 === 'number') {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        console.error('Error reading votes:', e);
       }
       return { option1: 0, option2: 0 };
     }
@@ -164,7 +171,7 @@
       option1.style.pointerEvents = 'none';
       option2.style.pointerEvents = 'none';
       voteBtn.disabled = true;
-      voteBtn.textContent = 'تم التصويت';
+      voteBtn.innerHTML = '<span class="material-symbols-outlined">check</span><span>تم التصويت</span>';
     }
 
     // Click events

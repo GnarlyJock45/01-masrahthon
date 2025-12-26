@@ -100,11 +100,18 @@
 
   <!-- Vote Display Script -->
   <script>
-    // Get votes from localStorage
+    // Get votes from localStorage with error handling
     function getVotes() {
-      const votes = localStorage.getItem('masrahthon_votes');
-      if (votes) {
-        return JSON.parse(votes);
+      try {
+        const votes = localStorage.getItem('masrahthon_votes');
+        if (votes) {
+          const parsed = JSON.parse(votes);
+          if (typeof parsed.option1 === 'number' && typeof parsed.option2 === 'number') {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        console.error('Error reading votes:', e);
       }
       // Default starting votes for demo
       return { option1: 13, option2: 7 };

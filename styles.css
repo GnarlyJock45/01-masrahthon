@@ -423,6 +423,7 @@ a:hover {
   background-repeat: no-repeat;
   background-position: left var(--space-md) center;
   padding-left: var(--space-2xl);
+  padding-right: var(--space-md);
 }
 
 .form-help {
@@ -490,6 +491,12 @@ a:hover {
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar::after {
+    animation: none;
+  }
 }
 
 .progress-label {
@@ -696,6 +703,11 @@ a:hover {
 .vote-option-text {
   font-size: var(--font-size-xl);
   padding: var(--space-xl) var(--space-md);
+}
+
+.vote-option:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 4px;
 }
 
 /* === SUCCESS/ERROR MESSAGES === */
