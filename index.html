@@ -41,8 +41,8 @@
     <!-- Hero Section -->
     <section class="hero">
       <div class="container">
-        <div class="hero-logo">
-          <span class="material-symbols-outlined" style="font-size: 120px; color: var(--color-primary);">theater_comedy</span>
+        <div class="hero-logo" style="margin-bottom: var(--space-md);">
+          <span class="material-symbols-outlined" style="font-size: 80px; color: var(--color-primary);">theater_comedy</span>
         </div>
         <h1 class="hero-title">أهلاً بك في داتا ون</h1>
         <p class="hero-subtitle">تطبيق المسرح التفاعلي بالواقع المعزز</p>
@@ -52,9 +52,15 @@
     <!-- Current Shows Section -->
     <section class="section">
       <div class="container">
-        <h2 class="text-center mb-xl">العروض الحالية</h2>
+        <div class="section-header">
+          <h2 class="mb-0">العروض الحالية</h2>
+          <button class="btn btn-glass btn-sm" id="qrAccessBtn" aria-label="وصول سريع عبر QR">
+            <span class="material-symbols-outlined">qr_code_2</span>
+            <span>وصول سريع</span>
+          </button>
+        </div>
 
-        <div class="current-show-card card card-featured fade-in">
+        <div class="current-show-card card fade-in">
           <span class="badge badge-new show-badge">جديد</span>
           <h3 class="show-title">مسرحثون</h3>
           <p class="show-description">عرض تفاعلي يجمع بين المسرح والتكنولوجيا</p>

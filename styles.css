@@ -163,7 +163,15 @@ a:hover {
 }
 
 .section {
-  padding: var(--space-2xl) 0;
+  padding: var(--space-xl) 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
 .section-hero {
@@ -426,6 +434,12 @@ a:hover {
   padding-right: var(--space-md);
 }
 
+.form-select option {
+  background-color: #0b2435;
+  color: #f5f5f5;
+  padding: var(--space-sm);
+}
+
 .form-help {
   display: block;
   margin-top: var(--space-sm);
@@ -550,7 +564,7 @@ a:hover {
 /* === HERO SECTION === */
 .hero {
   text-align: center;
-  padding: var(--space-3xl) 0;
+  padding: var(--space-xl) 0;
 }
 
 .hero-logo {
@@ -572,7 +586,7 @@ a:hover {
 .hero-subtitle {
   font-size: var(--font-size-xl);
   color: var(--color-text-secondary);
-  margin-bottom: var(--space-2xl);
+  margin-bottom: var(--space-lg);
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
@@ -583,6 +597,143 @@ a:hover {
   max-width: 800px;
   margin: 0 auto;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  /* Override default card background for image background */
+  background: transparent !important;
+  border: 2px solid var(--color-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Background image layer */
+.current-show-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('images/theater-image.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+/* Dark overlay layer */
+.current-show-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(11, 36, 53, 0.75);
+  z-index: 1;
+}
+
+.current-show-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Play page card with background */
+.play-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.play-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(11, 36, 53, 0.9);
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(11, 36, 53, 0.5) 0%,
+      rgba(14, 47, 68, 0.7) 50%,
+      rgba(11, 36, 53, 0.85) 100%
+    ),
+    url('images/theater2-image.jpeg');
+  background-size: cover;
+  background-position: center top;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+.play-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Vote page card with background */
+.vote-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.vote-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(11, 36, 53, 0.9);
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(11, 36, 53, 0.6) 0%,
+      rgba(14, 47, 68, 0.75) 50%,
+      rgba(11, 36, 53, 0.85) 100%
+    ),
+    url('images/theater2-image.jpeg');
+  background-size: cover;
+  background-position: center top;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+.vote-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* AI card with robot background */
+.card-ai {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-ai::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(11, 36, 53, 0.9);
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(11, 36, 53, 0.7) 0%,
+      rgba(14, 47, 68, 0.8) 50%,
+      rgba(11, 36, 53, 0.85) 100%
+    ),
+    url('images/image-robot-writer.png');
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+.card-ai > * {
+  position: relative;
+  z-index: 1;
 }
 
 .show-badge {
@@ -605,6 +756,17 @@ a:hover {
   font-size: var(--font-size-lg);
   color: var(--color-text-secondary);
   margin-bottom: var(--space-xl);
+}
+
+.show-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.show-actions .btn-glass {
+  font-size: var(--font-size-sm);
 }
 
 /* === DIRECTORS CTA === */

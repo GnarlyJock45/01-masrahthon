@@ -47,7 +47,7 @@
         <h1 class="text-center mb-2xl">شارك برأيك</h1>
 
         <!-- Question Card -->
-        <div class="card" style="max-width: 800px; margin: 0 auto;">
+        <div class="card vote-card" style="max-width: 800px; margin: 0 auto;">
           <div class="card-header">
             <h2 class="text-xl text-center mb-0">هل نبدأ بعرض القيمة السوقية أم النموذج التجاري؟</h2>
           </div>
@@ -102,42 +102,19 @@
     </div>
   </footer>
 
-  <!-- Voting Script with localStorage -->
+  <!-- Voting Script with Supabase -->
   <script>
+    // Supabase config
+    const SUPABASE_URL = 'https://pulivtraqzkuerytmwya.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1bGl2dHJhcXprdWVyeXRtd3lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1MjkxMDcsImV4cCI6MjA3ODEwNTEwN30.Aa62cmDHvxPuZb2b6QO4mZL3jmZJIKenLlnbwDlBwOI';
+
     const option1 = document.getElementById('option1');
     const option2 = document.getElementById('option2');
     const voteBtn = document.getElementById('voteBtn');
     const successMessage = document.getElementById('successMessage');
     let selectedOption = null;
 
-    // Initialize votes from localStorage with error handling
-    function getVotes() {
-      try {
-        const votes = localStorage.getItem('masrahthon_votes');
-        if (votes) {
-          const parsed = JSON.parse(votes);
-          if (typeof parsed.option1 === 'number' && typeof parsed.option2 === 'number') {
-            return parsed;
-          }
-        }
-      } catch (e) {
-        console.error('Error reading votes:', e);
-      }
-      return { option1: 0, option2: 0 };
-    }
-
-    // Save votes to localStorage
-    function saveVote(optionNumber) {
-      const votes = getVotes();
-      if (optionNumber === 1) {
-        votes.option1++;
-      } else if (optionNumber === 2) {
-        votes.option2++;
-      }
-      localStorage.setItem('masrahthon_votes', JSON.stringify(votes));
-    }
-
-    // Check if user has already voted
+    // Check if user has already voted (local check)
     function hasVoted() {
       return localStorage.getItem('masrahthon_user_voted') === 'true';
     }
@@ -147,19 +124,52 @@
       localStorage.setItem('masrahthon_user_voted', 'true');
     }
 
+    // Save vote to Supabase
+    async function saveVoteToSupabase(optionNumber) {
+      try {
+        // First get current votes
+        const getRes = await fetch(`${SUPABASE_URL}/rest/v1/votes?id=eq.masrahthon`, {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          }
+        });
+        const data = await getRes.json();
+        const current = data[0] || { option1: 0, option2: 0 };
+
+        // Increment the selected option
+        const newVotes = {
+          option1: optionNumber === 1 ? current.option1 + 1 : current.option1,
+          option2: optionNumber === 2 ? current.option2 + 1 : current.option2
+        };
+
+        // Update in Supabase
+        await fetch(`${SUPABASE_URL}/rest/v1/votes?id=eq.masrahthon`, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(newVotes)
+        });
+
+        return true;
+      } catch (e) {
+        console.error('Error saving vote:', e);
+        return false;
+      }
+    }
+
     // Handle option selection
     function selectOption(optionElement, optionNumber) {
       if (hasVoted()) return;
 
-      // Remove selection from both options
       option1.classList.remove('selected');
       option2.classList.remove('selected');
-
-      // Add selection to clicked option
       optionElement.classList.add('selected');
       selectedOption = optionNumber;
-
-      // Enable vote button
       voteBtn.disabled = false;
     }
 
@@ -194,26 +204,28 @@
     });
 
     // Vote button click
-    voteBtn.addEventListener('click', () => {
+    voteBtn.addEventListener('click', async () => {
       if (selectedOption && !hasVoted()) {
-        // Save vote to localStorage
-        saveVote(selectedOption);
-        markAsVoted();
-
-        // Show success message
-        successMessage.classList.remove('hidden');
-        successMessage.classList.add('fade-in');
-
-        // Disable voting options
-        option1.style.pointerEvents = 'none';
-        option2.style.pointerEvents = 'none';
         voteBtn.disabled = true;
-        voteBtn.innerHTML = '<span class="material-symbols-outlined">check</span><span>تم التصويت</span>';
+        voteBtn.innerHTML = '<span class="material-symbols-outlined">hourglass_empty</span><span>جاري التصويت...</span>';
 
-        // Redirect to results after short delay
-        setTimeout(() => {
-          window.location.href = 'masrahthon.html';
-        }, 1500);
+        const success = await saveVoteToSupabase(selectedOption);
+
+        if (success) {
+          markAsVoted();
+          successMessage.classList.remove('hidden');
+          successMessage.classList.add('fade-in');
+          option1.style.pointerEvents = 'none';
+          option2.style.pointerEvents = 'none';
+          voteBtn.innerHTML = '<span class="material-symbols-outlined">check</span><span>تم التصويت</span>';
+
+          setTimeout(() => {
+            window.location.href = 'masrahthon.html';
+          }, 1500);
+        } else {
+          voteBtn.disabled = false;
+          voteBtn.innerHTML = '<span class="material-symbols-outlined">error</span><span>حدث خطأ، حاول مرة أخرى</span>';
+        }
       }
     });
   </script>

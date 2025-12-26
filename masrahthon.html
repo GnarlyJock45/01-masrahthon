@@ -47,7 +47,7 @@
         <h1 class="text-center mb-2xl">مسرحثون</h1>
 
         <!-- Question Card -->
-        <div class="card" style="max-width: 900px; margin: 0 auto;">
+        <div class="card play-card" style="max-width: 900px; margin: 0 auto;">
           <div class="card-header">
             <h2 class="card-title text-center">نقطة تفاعل</h2>
           </div>
@@ -92,38 +92,48 @@
               <span class="material-symbols-outlined">how_to_vote</span>
               <span>شارك برأيك</span>
             </a>
+            <button id="resetBtn" class="btn btn-outline btn-lg" style="margin-top: var(--space-md);">
+              <span class="material-symbols-outlined">refresh</span>
+              <span>إعادة تعيين التصويت</span>
+            </button>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Vote Display Script -->
+  <!-- Vote Display Script with Supabase -->
   <script>
-    // Get votes from localStorage with error handling
-    function getVotes() {
+    // Supabase config
+    const SUPABASE_URL = 'https://pulivtraqzkuerytmwya.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB1bGl2dHJhcXprdWVyeXRtd3lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1MjkxMDcsImV4cCI6MjA3ODEwNTEwN30.Aa62cmDHvxPuZb2b6QO4mZL3jmZJIKenLlnbwDlBwOI';
+
+    // Fetch votes from Supabase
+    async function getVotes() {
       try {
-        const votes = localStorage.getItem('masrahthon_votes');
-        if (votes) {
-          const parsed = JSON.parse(votes);
-          if (typeof parsed.option1 === 'number' && typeof parsed.option2 === 'number') {
-            return parsed;
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/votes?id=eq.masrahthon`, {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
           }
+        });
+        const data = await res.json();
+        if (data && data[0]) {
+          return { option1: data[0].option1 || 0, option2: data[0].option2 || 0 };
         }
       } catch (e) {
-        console.error('Error reading votes:', e);
+        console.error('Error fetching votes:', e);
       }
-      // Default starting votes for demo
-      return { option1: 13, option2: 7 };
+      return { option1: 0, option2: 0 };
     }
 
     // Calculate percentages and update display
-    function updateVoteDisplay() {
-      const votes = getVotes();
+    async function updateVoteDisplay() {
+      const votes = await getVotes();
       const total = votes.option1 + votes.option2;
 
-      let percent1 = 50;
-      let percent2 = 50;
+      let percent1 = 0;
+      let percent2 = 0;
 
       if (total > 0) {
         percent1 = Math.round((votes.option1 / total) * 100);
@@ -139,8 +149,56 @@
       document.getElementById('option2Bar').style.width = percent2 + '%';
     }
 
+    // Reset votes in Supabase
+    async function resetVotes() {
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/votes?id=eq.masrahthon`, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ option1: 0, option2: 0 })
+        });
+        // Clear local voting flag so user can vote again
+        localStorage.removeItem('masrahthon_user_voted');
+        return true;
+      } catch (e) {
+        console.error('Error resetting votes:', e);
+        return false;
+      }
+    }
+
+    // Reset button handler
+    document.getElementById('resetBtn').addEventListener('click', async () => {
+      if (confirm('هل أنت متأكد من إعادة تعيين جميع الأصوات؟')) {
+        const resetBtn = document.getElementById('resetBtn');
+        resetBtn.disabled = true;
+        resetBtn.innerHTML = '<span class="material-symbols-outlined">hourglass_empty</span><span>جاري إعادة التعيين...</span>';
+
+        const success = await resetVotes();
+
+        if (success) {
+          await updateVoteDisplay();
+          resetBtn.innerHTML = '<span class="material-symbols-outlined">check</span><span>تم إعادة التعيين</span>';
+          setTimeout(() => {
+            resetBtn.disabled = false;
+            resetBtn.innerHTML = '<span class="material-symbols-outlined">refresh</span><span>إعادة تعيين التصويت</span>';
+          }, 2000);
+        } else {
+          resetBtn.disabled = false;
+          resetBtn.innerHTML = '<span class="material-symbols-outlined">error</span><span>حدث خطأ</span>';
+        }
+      }
+    });
+
     // Update on page load
     updateVoteDisplay();
+
+    // Auto-refresh every 5 seconds for live updates
+    setInterval(updateVoteDisplay, 5000);
   </script>
 
   <!-- Footer -->
