@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="داتا ون - تطبيق المسرح التفاعلي بالواقع المعزز">
+  <title>داتا ون - المسرح التفاعلي</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-container">
+      <nav class="header-nav">
+        <button class="btn btn-glass btn-sm" aria-label="الواقع المعزز">
+          <span class="material-symbols-outlined">view_in_ar</span>
+        </button>
+      </nav>
+
+      <div class="header-logo">
+        <span>داتا ون</span>
+      </div>
+
+      <nav class="header-nav">
+        <button class="btn btn-primary btn-sm">
+          تسجيل الدخول
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-logo">
+          <span class="material-symbols-outlined" style="font-size: 120px; color: var(--color-primary);">theater_comedy</span>
+        </div>
+        <h1 class="hero-title">أهلاً بك في داتا ون</h1>
+        <p class="hero-subtitle">تطبيق المسرح التفاعلي بالواقع المعزز</p>
+      </div>
+    </section>
+
+    <!-- Current Shows Section -->
+    <section class="section">
+      <div class="container">
+        <h2 class="text-center mb-xl">العروض الحالية</h2>
+
+        <div class="current-show-card card card-featured fade-in">
+          <span class="badge badge-new show-badge">جديد</span>
+          <h3 class="show-title">مسرحثون</h3>
+          <p class="show-description">عرض تفاعلي يجمع بين المسرح والتكنولوجيا</p>
+          <a href="masrahthon.html" class="btn btn-primary btn-lg">
+            <span>دخول العرض</span>
+            <span class="material-symbols-outlined">arrow_back</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Directors CTA Section -->
+    <section class="section">
+      <div class="container">
+        <div class="directors-cta">
+          <h2 class="mb-md">هل أنت مخرج؟</h2>
+          <p class="text-lg text-muted mb-xl">أنشئ عرضك التفاعلي الخاص</p>
+          <a href="create-play.html" class="btn btn-outline btn-lg">
+            <span class="material-symbols-outlined">add_circle</span>
+            <span>إنشاء عرض جديد</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <p class="footer-copyright">جميع الحقوق محفوظة © داتا ون 2024</p>
+        <nav class="footer-links">
+          <a href="#" class="footer-link">سياسة الخصوصية</a>
+          <span class="footer-link">|</span>
+          <a href="#" class="footer-link">الشروط والأحكام</a>
+          <span class="footer-link">|</span>
+          <a href="#" class="footer-link">تواصل معنا</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

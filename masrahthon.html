@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="مسرحثون - عرض تفاعلي">
+  <title>مسرحثون - داتا ون</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-container">
+      <nav class="header-nav">
+        <button class="btn btn-glass btn-sm" aria-label="الواقع المعزز">
+          <span class="material-symbols-outlined">view_in_ar</span>
+        </button>
+      </nav>
+
+      <div class="header-logo">
+        <a href="index.html" class="btn btn-glass btn-sm">
+          <span class="material-symbols-outlined">arrow_forward</span>
+          <span>رجوع</span>
+        </a>
+      </div>
+
+      <nav class="header-nav">
+        <button class="btn btn-primary btn-sm">
+          تسجيل الدخول
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Play Content -->
+    <section class="section">
+      <div class="container">
+        <h1 class="text-center mb-2xl">مسرحثون</h1>
+
+        <!-- Question Card -->
+        <div class="card" style="max-width: 900px; margin: 0 auto;">
+          <div class="card-header">
+            <h2 class="card-title text-center">نقطة تفاعل</h2>
+          </div>
+
+          <div class="card-body">
+            <p class="text-xl text-center mb-2xl">هل نبدأ بعرض القيمة السوقية أم النموذج التجاري؟</p>
+
+            <!-- Voting Results -->
+            <div class="grid grid-cols-2">
+              <!-- Option 1 -->
+              <div class="card">
+                <h3 class="text-xl mb-md">القيمة السوقية</h3>
+                <div class="progress-container">
+                  <div class="progress-label">
+                    <span>التصويت الحالي</span>
+                    <span id="option1Percent" class="progress-percentage">65%</span>
+                  </div>
+                  <div class="progress-bar-wrapper">
+                    <div id="option1Bar" class="progress-bar" style="width: 65%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Option 2 -->
+              <div class="card">
+                <h3 class="text-xl mb-md">النموذج التجاري</h3>
+                <div class="progress-container">
+                  <div class="progress-label">
+                    <span>التصويت الحالي</span>
+                    <span id="option2Percent" class="progress-percentage">35%</span>
+                  </div>
+                  <div class="progress-bar-wrapper">
+                    <div id="option2Bar" class="progress-bar" style="width: 35%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer text-center">
+            <a href="vote.html" class="btn btn-primary btn-lg">
+              <span class="material-symbols-outlined">how_to_vote</span>
+              <span>شارك برأيك</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Vote Display Script -->
+  <script>
+    // Get votes from localStorage
+    function getVotes() {
+      const votes = localStorage.getItem('masrahthon_votes');
+      if (votes) {
+        return JSON.parse(votes);
+      }
+      // Default starting votes for demo
+      return { option1: 13, option2: 7 };
+    }
+
+    // Calculate percentages and update display
+    function updateVoteDisplay() {
+      const votes = getVotes();
+      const total = votes.option1 + votes.option2;
+
+      let percent1 = 50;
+      let percent2 = 50;
+
+      if (total > 0) {
+        percent1 = Math.round((votes.option1 / total) * 100);
+        percent2 = Math.round((votes.option2 / total) * 100);
+      }
+
+      // Update percentage text
+      document.getElementById('option1Percent').textContent = percent1 + '%';
+      document.getElementById('option2Percent').textContent = percent2 + '%';
+
+      // Update progress bars
+      document.getElementById('option1Bar').style.width = percent1 + '%';
+      document.getElementById('option2Bar').style.width = percent2 + '%';
+    }
+
+    // Update on page load
+    updateVoteDisplay();
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <p class="footer-copyright">جميع الحقوق محفوظة © داتا ون 2024</p>
+        <nav class="footer-links">
+          <a href="#" class="footer-link">سياسة الخصوصية</a>
+          <span class="footer-link">|</span>
+          <a href="#" class="footer-link">الشروط والأحكام</a>
+          <span class="footer-link">|</span>
+          <a href="#" class="footer-link">تواصل معنا</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
